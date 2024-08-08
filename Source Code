@@ -1,0 +1,84 @@
+@echo off
+net.exe session 1>NUL 2>NUL && (
+    goto Noadmin
+) || (
+    goto random
+)
+
+:random
+set /a num=1 + %random% %% 2
+if %num% == 1 goto show1
+if %num% == 2 goto show2
+goto random
+:show1
+title Easy PYInstaller   1Tip: This program simply calls Pyinstaller, not directly modifies Pyinstaller.
+goto main
+:show2
+title Easy PYInstaller   2Tip:If you do not have pyinstaller installed, verify that pip and python are installed and environment variables are set. Then run the cmd command: "pip install pyinstaller".
+goto main
+:main
+color E5
+cls
+echo:
+echo:
+echo:                             Pyinstaller CALLS
+echo: -----------------------------------------------------------------------
+echo: The script does not support operating systems earlier than Windows10. But it still works. The functionality depends on your operating system.
+echo: Enter installpyinstaller to install the main program file.
+echo: Enter the path to compile (dragging the file to the window is also OK):
+set /p mainchoice1=
+if %mainchoice1% == installpyinstaller goto install
+:choice2
+echo:      Is it a single file? [1. Yes, 2. No]
+set /p mainchoice2=
+if %mainchoice2% == 1 goto startonefile
+if %mainchoice2% == 2 goto startnonefile
+goto choice2
+:startonefile
+pyinstaller --onefile "%mainchoice1%"
+color A4
+set "batchFilePath=%~f0"
+set "batchDirPath=%batchFilePath:~0,-4%"
+echo:
+echo:
+echo:
+echo You can find your successful compilation file in the dist folder in the same directory as the script.
+pause >nul
+goto main
+:startnonefile
+pyinstaller "%mainchoice1%"
+color A4
+set "batchFilePath=%~f0"
+set "batchDirPath=%batchFilePath:~0,-4%"
+echo:
+echo:
+echo:
+echo You can find your successful compilation file in the dist folder in the same directory as the script.
+pause >nul
+goto main
+:Noadmin
+color 4A
+title Fatal Error
+echo This program cannot be run with administrator privileges.
+echo If the system is run as an administrator, the output executable file is output to "System32".
+echo If you have an "Administrator" account, downgrade to a regular user administrator and try again.
+echo:
+echo The startup failed. Procedure Please try again after the repair is complete.
+pause >nul
+exit
+:install
+echo You entered "installpyinstaller". Do you want to install Pyinstaller?
+echo This installation is only available to users who have pip installed and environment variables set up.
+echo Continue?[1\YES,2\NO]
+set /p install=
+if %install% == 1 goto continue
+if %install% == 2 goto main
+goto install
+:continue
+echo Installing. . .
+pip install pyinstaller >nul
+echo:
+echo Installation complete. (not sure whether it is complete)
+pause >nul
+goto main
+exit
